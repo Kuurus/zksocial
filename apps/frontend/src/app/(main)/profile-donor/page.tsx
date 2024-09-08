@@ -15,7 +15,7 @@ export default function ProfileMalePage() {
     queryFn: () => {
       const userId = localStorage.getItem("user_id");
       if (!userId) {
-        router.push("/login-male");
+        router.push("/login-donor");
         return;
       }
       return axiosInstance
@@ -29,7 +29,7 @@ export default function ProfileMalePage() {
   });
 
   if (isError) {
-    router.push("/onboarding-male");
+    router.push("/onboarding-donor");
     return null;
   }
 
@@ -40,7 +40,7 @@ export default function ProfileMalePage() {
         <div className="mt-8 text-center">
           <h2 className="text-2xl font-bold text-white mb-4">Profile Complete!</h2>
           <Link
-            href="/onboarding-male"
+            href="/onboarding-donor"
             className="bg-white text-pink-500 py-3 px-6 rounded-full text-xl font-semibold hover:bg-pink-100 transition duration-300"
           >
             Edit profile

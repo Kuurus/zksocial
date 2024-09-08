@@ -41,7 +41,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <p className="text-2xl font-semibold">Spermify 👼</p>
         <Link href="/messages">Messages</Link>
         {genre === "female" && <Link href="/matching">Matching</Link>}
-        <p className={cn(genre === "female" ? "text-rose-500" : "text-blue-500")}>Logged as : {genre}</p>
+        <p className={cn(genre === "female" ? "text-rose-500" : "text-blue-500")}>
+          Logged as : {genre === "female" ? "recipient" : "donor"}
+        </p>
         <ConnectButton />
         <button onClick={logout}>Logout</button>
       </div>

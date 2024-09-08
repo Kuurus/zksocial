@@ -16,7 +16,7 @@ export default function OnboardingMalePage() {
             console.log("profile", profile);
             const userId = localStorage.getItem("user_id");
             if (!userId) {
-              return router.push("/login-male");
+              return router.push("/login-donor");
             }
             axiosInstance
               .post("/profile", {
@@ -24,7 +24,7 @@ export default function OnboardingMalePage() {
                 userId,
               })
               .then((res) => {
-                router.push("/profile-male");
+                router.push("/profile-donor");
               });
           }}
         />
