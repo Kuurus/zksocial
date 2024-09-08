@@ -33,7 +33,7 @@ const Card: React.FC<CardProps> = ({ card, removeCard, active }) => {
       return onNope();
     }
   };
-  const classNames = `h-[430px] w-[300px] bg-white flex flex-col justify-center items-center cursor-grab`;
+  const classNames = `h-[430px] w-[300px] bg-white flex flex-col justify-center items-center cursor-grab rounded-lg shadow-lg`;
 
   return (
     <div className="absolute">
@@ -63,19 +63,24 @@ const Card: React.FC<CardProps> = ({ card, removeCard, active }) => {
             <TinderCard card={card} />
           </motion.div>
         ) : (
-          <div className={`${classNames} ${card.age % 2 === 0 ? "rotate-6" : "-rotate-6"}`}>
+          <div className={`${classNames} ${card.age % 2 === 0 ? "rotate-3" : "-rotate-3"}`}>
             <TinderCard card={card} />
           </div>
         )}
       </div>
       {active && !leaveX && !leaveY && (
-        <div className="grid grid-cols-3 gap-4 mt-24">
-          <button onClick={onNope} className="bg-red-500 p-2 py-4 rounded-full flex items-center justify-center">
-            <X className="text-white" />
+        <div className="grid grid-cols-2 gap-4 mt-8">
+          <button
+            onClick={onNope}
+            className="bg-red-500 p-3 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+          >
+            <X className="text-white w-8 h-8" />
           </button>
-
-          <button onClick={onLike} className="bg-green-500 p-2 py-4 rounded-full flex items-center justify-center">
-            <Heart className="text-white" />
+          <button
+            onClick={onLike}
+            className="bg-green-500 p-3 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
+          >
+            <Heart className="text-white w-8 h-8" />
           </button>
         </div>
       )}
