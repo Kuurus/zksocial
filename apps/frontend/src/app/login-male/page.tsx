@@ -1,6 +1,6 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/axios";
@@ -12,9 +12,9 @@ export default function LoginMale() {
   const { signMessage } = useSignMessage();
   const router = useRouter();
 
-  const { client, error, isLoading, initialize } = useClient();
+  const { initialize } = useClient();
 
-  useEffect(() => {
+  const login = useCallback(async () => {
     const authenticate = async (signature: string) => {
       axiosInstance
         .post("/authenticate", {
@@ -35,47 +35,51 @@ export default function LoginMale() {
         });
     };
 
-    const sign = async () => {
-      if (isConnected && address) {
-        const storedSignature = localStorage.getItem("signature_" + address);
-        console.log("storedSignature", storedSignature, typeof storedSignature);
+    if (isConnected && address) {
+      const storedSignature = localStorage.getItem("signature_" + address);
+      console.log("storedSignature", storedSignature, typeof storedSignature);
 
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const options = {
-          persistConversations: false,
-          env: "dev",
-        } as const;
-        await initialize({ options, signer });
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const options = {
+        persistConversations: false,
+        env: "dev",
+      } as const;
+      await initialize({ options, signer });
 
-        if (storedSignature) {
-          console.log("Using stored signature:", storedSignature);
-          authenticate(storedSignature);
-        } else {
-          await signMessage(
-            { message: "Sign this message to connect with Kinto." },
-            {
-              onSuccess: (data) => {
-                console.log("New signature:", data);
-                localStorage.setItem("signature_" + address, data);
-                authenticate(data);
-              },
-              onError: (error) => {
-                console.error("Error signing message:", error);
-              },
-            }
-          );
-        }
+      if (storedSignature) {
+        console.log("Using stored signature:", storedSignature);
+        authenticate(storedSignature);
+      } else {
+        await signMessage(
+          { message: "Sign this message to connect with Kinto." },
+          {
+            onSuccess: (data) => {
+              console.log("New signature:", data);
+              localStorage.setItem("signature_" + address, data);
+              authenticate(data);
+            },
+            onError: (error) => {
+              console.error("Error signing message:", error);
+            },
+          }
+        );
       }
-    };
-    setTimeout(sign, 600);
-  }, [address, isConnected, router, signMessage, initialize]);
+    } else {
+      alert("Please connect your wallet");
+    }
+  }, [isConnected, address, signMessage, router, initialize]);
 
   return (
     <div className="flex justify-center items-center h-full">
       <div className="mt-10">
         <h1 className="text-2xl font-semibold text-blue-500">Login Male</h1>
         <ConnectButton />
+        {isConnected && (
+          <button className="p-3 border rounded-md border-blue-500" onClick={login}>
+            Login
+          </button>
+        )}
       </div>
     </div>
   );
