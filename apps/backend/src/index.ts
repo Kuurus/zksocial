@@ -61,12 +61,12 @@ AppDataSource.initialize()
           return res.status(500).json({ message: "Failed to fetch data from the subgraph." });
         }
 
-        // For testing purposes this is commented out
         // Step 3: Check if the wallet address exists in the returned accounts
         const kintoWallets = graphQLData.data.KintoWalletFactory_KintoWalletFactoryCreation;
         const foundAccount = kintoWallets.find((wallet: { owner: string }) => wallet.owner.toLowerCase() === walletAddress.toLowerCase());
         console.log(foundAccount)
     
+        // For testing purposes this is commented out
         // if (!foundAccount) {
         //   return res.status(400).json({ message: "Wallet not found in Kinto Wallet Factory creations." });
         // }
