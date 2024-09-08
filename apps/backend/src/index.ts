@@ -5,9 +5,11 @@ import { User } from "./entities/User";
 import { Profile } from "./entities/Profile";
 import { Swipe } from "./entities/Swipes";
 import { ethers } from "ethers";
+import axios from 'axios';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const GRAPHQL_URL = "https://indexer.bigdevenergy.link/af4c80c/v1/graphql";
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -26,14 +28,48 @@ AppDataSource.initialize()
 
       try {
         // Step 1: Verify the signature
-        var message = "Sign this message to connect with Kinto.";
+        const message = "Sign this message to connect with Kinto.";
         const recoveredAddress = ethers.verifyMessage(message, signature);
 
         if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
           return res.status(400).json({ message: "Invalid signature." });
         }
 
-        // Step 2: Find or create user
+        // Step 2: Make a GraphQL request to check Kinto Wallet Factory creations
+        const graphQLQuery = {
+          query: `
+            query GetKintoWalletFactoryCreations($first: Int = 10, $skip: Int = 0) {
+              KintoWalletFactory_KintoWalletFactoryCreation(
+                order_by: { id: desc }
+              ) {
+                id
+                account
+                owner
+                version
+                db_write_timestamp
+              }
+            }
+          `
+        };
+    
+        const graphQLResponse = await axios.post(GRAPHQL_URL, graphQLQuery, {
+          headers: { "Content-Type": "application/json" }
+        });
+    
+        const graphQLData = graphQLResponse.data;
+        if (!graphQLData.data) {
+          return res.status(500).json({ message: "Failed to fetch data from the subgraph." });
+        }
+
+        // Step 3: Check if the wallet address exists in the returned accounts
+        // const kintoWallets = graphQLData.data.KintoWalletFactory_KintoWalletFactoryCreation;
+        // const foundAccount = kintoWallets.find((wallet: { owner: string }) => wallet.owner.toLowerCase() === walletAddress.toLowerCase());
+    
+        // if (!foundAccount) {
+        //   return res.status(400).json({ message: "Wallet not found in Kinto Wallet Factory creations." });
+        // }
+
+        // Step 4: Find or create the user in your database
         const userRepository = AppDataSource.getRepository(User);
         let user = await userRepository.findOneBy({ walletAddress });
         let isNewUser = false;
@@ -46,17 +82,17 @@ AppDataSource.initialize()
           user = userRepository.create({ walletAddress, isVerified: true, gender });
           isNewUser = true;
         } else {
-          // Login
+          user.isVerified = true;
         }
 
         const isOnboardingDone = await AppDataSource.getRepository(Profile)
           .findOneBy({ user: { id: user.id } })
-          .then((profile) => profile !== null);
+          .then(profile => profile !== null);
 
         await userRepository.save(user);
 
-        var message = isNewUser ? "User registered and verified successfully." : "User authenticated successfully.";
-        res.status(200).json({ message, user, isNewUser, isOnboardingDone });
+        const responseMessage = isNewUser ? "User registered and verified successfully." : "User authenticated successfully.";
+        res.status(200).json({ message: responseMessage, user, isNewUser, isOnboardingDone });
       } catch (error) {
         console.error("Error authenticating user:", error);
         res.status(500).json({ message: "Internal Server Error" });
