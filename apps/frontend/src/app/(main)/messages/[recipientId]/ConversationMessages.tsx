@@ -38,7 +38,7 @@ const ConversationMessages: React.FC<ConversationMessagesProps> = ({ conversatio
         {messages.map((message, index) => (
           <ConversationMessage
             key={index}
-            message={message.content + " " + message.walletAddress}
+            message={message.content}
             time={message.sentAt.toLocaleTimeString()}
             isMe={message.senderAddress.toLocaleLowerCase() === myAddress?.toLocaleLowerCase()}
             avatar="/placeholder-user.jpg"
