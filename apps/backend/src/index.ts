@@ -47,10 +47,6 @@ AppDataSource.initialize()
           isNewUser = true;
         } else {
           // Login
-          user.isVerified = true;
-          if (gender) {
-            user.gender = gender;
-          }
         }
 
         const isOnboardingDone = await AppDataSource.getRepository(Profile)
