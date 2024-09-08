@@ -4,10 +4,11 @@ import ConversationItem from "@/components/features/messages/ConversationItem";
 
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
-import { useConversations } from "@xmtp/react-sdk";
+import { useClient, useConversations } from "@xmtp/react-sdk";
 import { axiosInstance } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
+import { useCreateXMTPClient } from "@/components/XMTPPClient";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { address } = useAccount();
   const { conversations } = useConversations();
 
+  useCreateXMTPClient();
   const selectedConversation = conversations.find(
     (conversation) => conversation.peerAddress === pathname.split("/")[2]
   );
@@ -27,7 +29,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .then((res) => res.data?.matches as [{ walletAddress: string; image: string }]),
   });
 
-  console.log("matches", matches);
+  const newMatches = matches?.filter(
+    (match) => !conversations.find((conversation) => conversation.peerAddress === match.walletAddress)
+  );
 
   return (
     <div className="grid h-full w-full bg-background md:grid-cols-[300px_1fr]">
@@ -54,22 +58,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               isActive={selectedConversation?.peerAddress === conversation.peerAddress}
             />
           ))}
-          <p>New matches ({matches?.length}) </p>
-          {matches
-            ?.filter((match) => !conversations.find((conversation) => conversation.peerAddress === match.walletAddress))
-            .map((match) => (
-              <ConversationItem
-                key={match.walletAddress}
-                name={match.walletAddress}
-                message={""}
-                time={""}
-                avatar={match.image}
-                onClick={() => {
-                  router.push(`/messages/${match.walletAddress}`);
-                }}
-                isActive={selectedConversation?.peerAddress === match.walletAddress}
-              />
-            ))}
+          {newMatches?.length && <p>New matches ({newMatches?.length}) </p>}
+          {newMatches?.map((match) => (
+            <ConversationItem
+              key={match.walletAddress}
+              name={match.walletAddress}
+              message={""}
+              time={""}
+              avatar={match.image}
+              onClick={() => {
+                router.push(`/messages/${match.walletAddress}`);
+              }}
+              isActive={selectedConversation?.peerAddress === match.walletAddress}
+            />
+          ))}
         </div>
       </div>
 

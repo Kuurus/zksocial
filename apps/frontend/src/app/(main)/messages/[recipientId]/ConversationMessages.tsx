@@ -6,7 +6,15 @@ interface ConversationMessagesProps {
   conversation: CachedConversation<ContentTypeMetadata>;
 }
 
-const ConversationMessages: React.FC<ConversationMessagesProps> = ({ conversation }) => {
+const ConversationMessages: React.FC<ConversationMessagesProps> = ({ conversation: _conversation }) => {
+  const [conversation, setConversation] = useState(_conversation);
+
+  useEffect(() => {
+    if (_conversation.topic !== conversation.topic) {
+      setConversation(_conversation);
+    }
+  }, [_conversation, conversation.topic]);
+
   const { messages } = useMessages(conversation);
   const [myAddress, setMyAddress] = useState<string | null>(null);
 
@@ -28,9 +36,6 @@ const ConversationMessages: React.FC<ConversationMessagesProps> = ({ conversatio
 
     getMyAddress();
   }, []);
-  const { error } = useStreamMessages(conversation);
-
-  console.log(myAddress, messages);
 
   return (
     <div className="overflow-scroll p-4">

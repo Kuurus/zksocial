@@ -2,10 +2,12 @@
 import { useClient } from "@xmtp/react-sdk";
 import { BrowserProvider } from "ethers";
 import { useCallback, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
-export const CreateClient = () => {
+export const useCreateXMTPClient = () => {
   const { client, error, isLoading, initialize } = useClient();
 
+  const { isConnected } = useAccount();
   const [signer, setSigner] = useState<any | null>(null);
 
   useEffect(() => {
@@ -26,28 +28,21 @@ export const CreateClient = () => {
   }, []);
 
   const handleConnect = useCallback(async () => {
+    if (client) {
+      return;
+    }
     const options = {
       persistConversations: false,
       env: "dev",
     } as const;
     await initialize({ options, signer });
-  }, [initialize, signer]);
+  }, [initialize, signer, client]);
 
-  if (error) {
-    return "An error occurred while initializing the client";
-  }
+  useEffect(() => {
+    if (isConnected) {
+      handleConnect();
+    }
+  }, [isConnected, handleConnect]);
 
-  if (isLoading) {
-    return "Awaiting signatures...";
-  }
-
-  if (!client) {
-    return (
-      <button type="button" onClick={handleConnect} className="font-bold">
-        Connect to XMTP
-      </button>
-    );
-  }
-
-  return "Connected to XMTP";
+  return true;
 };

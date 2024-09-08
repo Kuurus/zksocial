@@ -1,5 +1,5 @@
 "use client";
-import { CreateClient } from "@/components/XMTPPClient";
+import { useCreateXMTPClient } from "@/components/XMTPPClient";
 import { cn } from "@/lib/utils";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useClient } from "@xmtp/react-sdk";
@@ -9,15 +9,19 @@ import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { address, isDisconnected } = useAccount();
+  const { address } = useAccount();
+
   const { client, disconnect } = useClient();
 
   const router = useRouter();
   useEffect(() => {
     if (address && address !== localStorage.getItem("user_address")) {
-      router.push("/login");
+      return router.push("/login");
     }
-  }, [address, router, isDisconnected]);
+    if (!localStorage.getItem("user_id")) {
+      return router.push("/login");
+    }
+  }, [address, router]);
 
   function logout() {
     disconnect().then(() => {
@@ -37,7 +41,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <p className="text-2xl font-semibold">Spermify 👼</p>
         <Link href="/messages">Messages</Link>
         {genre === "female" && <Link href="/matching">Matching</Link>}
-        <CreateClient />
         <p className={cn(genre === "female" ? "text-rose-500" : "text-blue-500")}>Logged as : {genre}</p>
         <ConnectButton />
         <button onClick={logout}>Logout</button>
