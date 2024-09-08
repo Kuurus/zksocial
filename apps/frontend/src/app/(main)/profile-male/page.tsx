@@ -13,7 +13,7 @@ export default function ProfileMalePage() {
   const { data: profile, isError } = useQuery({
     queryKey: ["profile", address],
     queryFn: () => {
-      const userId = localStorage.getItem("user_id_" + address);
+      const userId = localStorage.getItem("user_id");
       if (!userId) {
         router.push("/login-male");
         return;

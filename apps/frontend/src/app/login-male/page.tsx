@@ -25,7 +25,7 @@ export default function LoginMale() {
         .then((res) => {
           console.log("res", res);
           localStorage.setItem("user_id", res.data.user.id);
-          localStorage.setItem("user_gender", "female");
+          localStorage.setItem("user_gender", "male");
           localStorage.setItem("user_address", address || "");
           if (res.data.isOnboardingDone) {
             router.push("/profile-male");

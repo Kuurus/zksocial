@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     queryKey: ["matches", address],
     queryFn: () =>
       axiosInstance
-        .get("/matches", { params: { userId: localStorage.getItem("user_id_" + address) } })
+        .get("/matches", { params: { userId: localStorage.getItem("user_id") } })
         .then((res) => res.data?.matches as [{ walletAddress: string; image: string }]),
   });
 

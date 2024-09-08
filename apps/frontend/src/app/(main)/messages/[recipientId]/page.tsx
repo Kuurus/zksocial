@@ -46,33 +46,34 @@ export default function Page({ params }: { params: { recipientId: string } }) {
   return (
     <div>
       <div className="flex flex-col h-[calc(100vh-77px)] relative">
-        {conversation && (
-          <>
-            <div className="border-b p-4 sticky top-0">
-              <div className="flex items-center gap-3">
-                <ArrowLeft
-                  className="w-6 h-6 md:hidden"
-                  onClick={() => {
-                    router.push("/messages");
-                  }}
-                />
-                <Avatar className="h-10 w-10 border">
-                  {/* <AvatarImage src={selectedConversation.avatar} alt="Avatar" /> */}
-                  <AvatarFallback>{conversation.peerAddress.slice(0, 2).toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="font-medium">{conversation.peerAddress}</h3>
-                  <p className="text-sm text-muted-foreground">Online</p>
-                </div>
-              </div>
+        <div className="border-b p-4 sticky top-0">
+          <div className="flex items-center gap-3">
+            <ArrowLeft
+              className="w-6 h-6 md:hidden"
+              onClick={() => {
+                router.push("/messages");
+              }}
+            />
+            <Avatar className="h-10 w-10 border">
+              {/* <AvatarImage src={selectedConversation.avatar} alt="Avatar" /> */}
+              {conversation ? (
+                <AvatarFallback>{conversation.peerAddress.slice(0, 2).toUpperCase()}</AvatarFallback>
+              ) : (
+                ""
+              )}
+            </Avatar>
+            <div>
+              <h3 className="font-medium">{conversation?.peerAddress || "New message"}</h3>
+              <p className="text-sm text-muted-foreground">Online</p>
             </div>
-            <div className="overflow-scroll p-4 ">
-              <div className="grid gap-4">
-                <ConversationMessages conversation={conversation} />
-              </div>
-            </div>
-          </>
-        )}
+          </div>
+        </div>
+        <div className="overflow-scroll p-4 ">
+          <div className="grid gap-4">
+            {conversation ? <ConversationMessages conversation={conversation} /> : "No messages yet"}
+          </div>
+        </div>
+
         <div className="border-t p-4 sticky bottom-0">
           <div className="relative">
             <Textarea

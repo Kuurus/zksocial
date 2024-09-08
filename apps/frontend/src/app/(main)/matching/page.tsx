@@ -43,7 +43,7 @@ export default function Page() {
       return axiosInstance
         .get("/profiles", {
           params: {
-            userId: localStorage.getItem("user_id_" + address),
+            userId: localStorage.getItem("user_id"),
           },
         })
         .then((res) => res.data);
@@ -63,7 +63,7 @@ export default function Page() {
   const activeIndex = cards.length - 1;
   const removeCard = (oldCard: IProfile, swipe: SwipeType) => {
     axiosInstance.post("/swipe", {
-      userId: localStorage.getItem("user_id_" + address),
+      userId: localStorage.getItem("user_id"),
       profileId: oldCard.id,
       action: swipe,
     });

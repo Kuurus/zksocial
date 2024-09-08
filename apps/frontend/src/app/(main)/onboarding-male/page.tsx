@@ -14,7 +14,7 @@ export default function OnboardingMalePage() {
         <ProfileOnboarding
           onComplete={(profile) => {
             console.log("profile", profile);
-            const userId = localStorage.getItem("user_id_" + address);
+            const userId = localStorage.getItem("user_id");
             if (!userId) {
               return router.push("/login-male");
             }
