@@ -2,6 +2,8 @@
 
 **Spermify** is a revolutionary decentralized application (dApp) designed to facilitate and regulate sperm donation using blockchain technology. Inspired by the user-friendly interface of dating apps like Tinder, Spermify connects sperm donors and recipients while ensuring privacy, security, and ethical practices.
 
+This is a monorepo containing the frontend and backend of the spermify app.
+
 ## Table of Contents
 
 - [Overview](#overview)
