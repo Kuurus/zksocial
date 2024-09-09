@@ -1,8 +1,13 @@
 # Spermify
 
+Tired of not knowing who's the dad?
+Tired of not knowing the genes?
+Tired of not knowing the face?
+Chose Spermify
+
 **Spermify** is a revolutionary decentralized application (dApp) designed to facilitate and regulate sperm donation using blockchain technology. Inspired by the user-friendly interface of dating apps like Tinder, Spermify connects sperm donors and recipients while ensuring privacy, security, and ethical practices.
 
-This is a monorepo containing the frontend and backend of the spermify app.
+This is a monorepo containing the frontend and backend of the Spermify app. This POC is made in the context of the [ETHGlobal Ethonline 2024](https://ethglobal.com/events/ethonline2024) hackathon. You can find more details about the project on the [ETHGlobal Showcase](https://ethglobal.com/showcase/spermify-7s9jk).
 
 ## Table of Contents
 
