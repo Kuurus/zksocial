@@ -1,9 +1,9 @@
 # Spermify
 
-* Tired of not knowing who's the dad? *  
-* Tired of not knowing the genes? *  
-* Tired of not knowing the face? *  
-* Chose Spermify *  
+*Tired of not knowing who's the dad?*  
+*Tired of not knowing the genes?*  
+*Tired of not knowing the face?*  
+*Chose Spermify*  
 
 **Spermify** is a revolutionary decentralized application (dApp) designed to facilitate and regulate sperm donation using blockchain technology. Inspired by the user-friendly interface of dating apps like Tinder, Spermify connects sperm donors and recipients while ensuring privacy, security, and ethical practices.
 
